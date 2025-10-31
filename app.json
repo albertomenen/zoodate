@@ -2,7 +2,7 @@
   "expo": {
     "name": "zoodate",
     "slug": "zoodate",
-    "version": "1.1.1",
+    "version": "1.7.0",
     "orientation": "portrait",
     "icon": "./assets/images/zoodate.png",
     "scheme": "zoodate",
@@ -14,7 +14,7 @@
       "config": {
         "googleMapsApiKey": "YOUR_IOS_GOOGLE_MAPS_API_KEY"
       },
-      "bundleIdentifier": "com.menensito.zoodate",
+      "bundleIdentifier": "com.cristian.zoodates",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
@@ -33,7 +33,8 @@
         "googleMaps": {
           "apiKey": "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
         }
-      }
+      },
+      "package": "com.cristian.zoodates"
     },
     "web": {
       "output": "static",
@@ -62,7 +63,8 @@
       "router": {},
       "eas": {
         "projectId": "22fd7cb0-7f0e-4b86-846b-fdc6b7e35238"
-      }
+      },
+      "EXPO_PUBLIC_REVENUECAT_IOS_API_KEY": "appl_hkzsUKuQzHqLadsRRqsRHxzqpro"
     }
   }
 }

@@ -12,6 +12,8 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import LoadingDog from '@/components/LoadingDog';
+import PaywallModal from '@/components/PaywallModal';
+import { useRevenueCat } from '@/contexts/RevenueCatContext';
 
 interface PetDetail {
   id: string;
@@ -35,10 +37,12 @@ interface PetDetail {
 export default function PetDetailScreen() {
   const { petId } = useLocalSearchParams<{ petId: string }>();
   const router = useRouter();
+  const { isSubscribed, checkSubscription } = useRevenueCat();
   const [pet, setPet] = useState<PetDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentUserPetId, setCurrentUserPetId] = useState<string | null>(null);
   const [existingMatchId, setExistingMatchId] = useState<string | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   useEffect(() => {
     loadPetDetail();
@@ -126,6 +130,14 @@ export default function PetDetailScreen() {
         return;
       }
 
+      // Verificar si el usuario tiene suscripción activa
+      if (!isSubscribed) {
+        // Mostrar el paywall
+        setShowPaywall(true);
+        return;
+      }
+
+      // Proceder con el contacto
       // Si no existe match, verificar si hay likes mutuos
       const { data: myLike } = await supabase
         .from('likes')
@@ -177,6 +189,11 @@ export default function PetDetailScreen() {
       console.error('Error handling message:', error);
       Alert.alert('Error', 'No se pudo enviar el mensaje');
     }
+  };
+
+  const handlePurchaseSuccess = async () => {
+    await checkSubscription();
+    handleSendMessage();
   };
 
   const getIntentLabel = (intent?: string) => {
@@ -320,6 +337,12 @@ export default function PetDetailScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <PaywallModal
+        visible={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        onSuccess={handlePurchaseSuccess}
+      />
     </View>
   );
 }

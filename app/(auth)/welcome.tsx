@@ -111,7 +111,10 @@ export default function WelcomeScreen() {
   const handleGoogleLogin = async () => {
     setLoading(true);
 
-    const redirectUrl = AuthSession.makeRedirectUri();
+    const redirectUrl = AuthSession.makeRedirectUri({
+      scheme: 'zoodate',
+      path: 'auth/callback'
+    });
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -161,7 +164,10 @@ export default function WelcomeScreen() {
   const handleFacebookLogin = async () => {
     setLoading(true);
 
-    const redirectUrl = AuthSession.makeRedirectUri();
+    const redirectUrl = AuthSession.makeRedirectUri({
+      scheme: 'zoodate',
+      path: 'auth/callback'
+    });
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'facebook',
