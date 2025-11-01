@@ -2,7 +2,7 @@
   "expo": {
     "name": "zoodate",
     "slug": "zoodate",
-    "version": "1.7.0",
+    "version": "1.9.0",
     "orientation": "portrait",
     "icon": "./assets/images/zoodate.png",
     "scheme": "zoodate",
@@ -18,7 +18,7 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "1"
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {
@@ -65,6 +65,12 @@
         "projectId": "22fd7cb0-7f0e-4b86-846b-fdc6b7e35238"
       },
       "EXPO_PUBLIC_REVENUECAT_IOS_API_KEY": "appl_hkzsUKuQzHqLadsRRqsRHxzqpro"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/22fd7cb0-7f0e-4b86-846b-fdc6b7e35238"
     }
   }
 }

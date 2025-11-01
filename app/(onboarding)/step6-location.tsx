@@ -9,6 +9,9 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -213,95 +216,105 @@ export default function Step6Location() {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={0}
     >
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>← Atrás</Text>
-        </TouchableOpacity>
-        <Text style={styles.stepIndicator}>Paso 6 de 6</Text>
-
-        {/* Animación del globo */}
-        <View style={styles.animationContainer}>
-          <LottieView
-            source={require('@/assets/animations/Globe.json')}
-            autoPlay
-            loop
-            style={styles.animation}
-          />
-        </View>
-
-        <Text style={styles.title}>¡Último paso! ¿Dónde podemos encontraros?</Text>
-        <Text style={styles.subtitle}>
-          Necesitamos tu ubicación para mostrarte los perfiles más cercanos. Tu dirección exacta nunca será compartida.
-        </Text>
-      </View>
-
-      {/* Form */}
-      <View style={styles.content}>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Tu nombre</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="ej: Juan"
-            value={ownerName}
-            onChangeText={setOwnerName}
-            autoCapitalize="words"
-            editable={!loading}
-          />
-        </View>
-
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Ciudad</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="ej: Madrid"
-            value={cityName}
-            onChangeText={setCityName}
-            autoCapitalize="words"
-            editable={!loading}
-          />
-        </View>
-
-        <TouchableOpacity
-          style={styles.locationButton}
-          onPress={getLocation}
-          disabled={loading || locationLoading}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          {locationLoading ? (
-            <ActivityIndicator color="#FF6B6B" />
-          ) : (
-            <>
-              <Text style={styles.locationIcon}>📍</Text>
-              <Text style={styles.locationButtonText}>Usar mi ubicación actual</Text>
-            </>
-          )}
-        </TouchableOpacity>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+              <Text style={styles.backButtonText}>← Atrás</Text>
+            </TouchableOpacity>
+            <Text style={styles.stepIndicator}>Paso 6 de 6</Text>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoIcon}>🔒</Text>
-          <Text style={styles.infoText}>
-            Tu privacidad es importante. Solo mostraremos la distancia aproximada a otros usuarios.
-          </Text>
-        </View>
-      </View>
+            {/* Animación del globo */}
+            <View style={styles.animationContainer}>
+              <LottieView
+                source={require('@/assets/animations/Globe.json')}
+                autoPlay
+                loop
+                style={styles.animation}
+              />
+            </View>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleFinish}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>
-              Descubrir Matches para {data.petName} 🎉
+            <Text style={styles.title}>¡Último paso! ¿Dónde podemos encontraros?</Text>
+            <Text style={styles.subtitle}>
+              Necesitamos tu ubicación para mostrarte los perfiles más cercanos. Tu dirección exacta nunca será compartida.
             </Text>
-          )}
-        </TouchableOpacity>
-      </View>
+          </View>
+
+          {/* Form */}
+          <View style={styles.content}>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Tu nombre</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="ej: Juan"
+                value={ownerName}
+                onChangeText={setOwnerName}
+                autoCapitalize="words"
+                editable={!loading}
+              />
+            </View>
+
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Ciudad</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="ej: Madrid"
+                value={cityName}
+                onChangeText={setCityName}
+                autoCapitalize="words"
+                editable={!loading}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.locationButton}
+              onPress={getLocation}
+              disabled={loading || locationLoading}
+            >
+              {locationLoading ? (
+                <ActivityIndicator color="#FF6B6B" />
+              ) : (
+                <>
+                  <Text style={styles.locationIcon}>📍</Text>
+                  <Text style={styles.locationButtonText}>Usar mi ubicación actual</Text>
+                </>
+              )}
+            </TouchableOpacity>
+
+            <View style={styles.infoBox}>
+              <Text style={styles.infoIcon}>🔒</Text>
+              <Text style={styles.infoText}>
+                Tu privacidad es importante. Solo mostraremos la distancia aproximada a otros usuarios.
+              </Text>
+            </View>
+          </View>
+
+          {/* Footer */}
+          <View style={styles.footer}>
+            <TouchableOpacity
+              style={[styles.button, loading && styles.buttonDisabled]}
+              onPress={handleFinish}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>
+                  Descubrir Matches para {data.petName} 🎉
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
@@ -310,6 +323,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   header: {
     paddingTop: 60,
@@ -350,8 +369,8 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   content: {
-    flex: 1,
     paddingHorizontal: 30,
+    marginBottom: 20,
   },
   fieldContainer: {
     marginBottom: 20,

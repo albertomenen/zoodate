@@ -14,6 +14,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as AuthSession from 'expo-auth-session';
 import { useRouter } from 'expo-router';
 import LoadingDog from '@/components/LoadingDog';
+import { AntDesign } from '@expo/vector-icons';
 
 // Necesario para cerrar el navegador después de la autenticación
 WebBrowser.maybeCompleteAuthSession();
@@ -160,58 +161,6 @@ export default function WelcomeScreen() {
     setLoading(false);
   };
 
-  // Login con Facebook OAuth
-  const handleFacebookLogin = async () => {
-    setLoading(true);
-
-    const redirectUrl = AuthSession.makeRedirectUri({
-      scheme: 'zoodate',
-      path: 'auth/callback'
-    });
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook',
-      options: {
-        redirectTo: redirectUrl,
-        skipBrowserRedirect: true,
-      },
-    });
-
-    if (error) {
-      setLoading(false);
-      Alert.alert('Error', error.message);
-      return;
-    }
-
-    if (data?.url) {
-      const result = await WebBrowser.openAuthSessionAsync(
-        data.url,
-        redirectUrl
-      );
-
-      if (result.type === 'success') {
-        const url = result.url;
-        const params = new URLSearchParams(url.split('#')[1] || url.split('?')[1]);
-        const accessToken = params.get('access_token');
-        const refreshToken = params.get('refresh_token');
-
-        if (accessToken && refreshToken) {
-          const { error: sessionError } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          });
-
-          if (sessionError) {
-            Alert.alert('Error', sessionError.message);
-          } else {
-            router.replace('/(onboarding)/step1-welcome');
-          }
-        }
-      }
-    }
-
-    setLoading(false);
-  };
 
   if (loading) {
     return <LoadingDog message="Iniciando sesión..." />;
@@ -277,20 +226,14 @@ export default function WelcomeScreen() {
 
         {/* Google Login Button */}
         <TouchableOpacity
-          style={[styles.button, styles.googleButton]}
+          style={[styles.googleButton]}
           onPress={handleGoogleLogin}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>🔍 Continuar con Google</Text>
-        </TouchableOpacity>
-
-        {/* Facebook Login Button */}
-        <TouchableOpacity
-          style={[styles.button, styles.facebookButton]}
-          onPress={handleFacebookLogin}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>📘 Continuar con Facebook</Text>
+          <View style={styles.googleButtonContent}>
+            <AntDesign name="google" size={20} color="#fff" style={styles.googleIcon} />
+            <Text style={styles.googleButtonText}>Continuar con Google</Text>
+          </View>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -346,10 +289,29 @@ const styles = StyleSheet.create({
     color: '#FF6B6B',
   },
   googleButton: {
-    backgroundColor: '#4285F4',
+    backgroundColor: '#131314',
+    borderWidth: 1,
+    borderColor: '#8e918f',
+    borderRadius: 20,
+    height: 40,
+    paddingHorizontal: 12,
+    overflow: 'hidden',
+    marginBottom: 12,
   },
-  facebookButton: {
-    backgroundColor: '#1877F2',
+  googleButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  googleIcon: {
+    marginRight: 12,
+  },
+  googleButtonText: {
+    color: '#e3e3e3',
+    fontSize: 14,
+    fontWeight: '500',
+    letterSpacing: 0.25,
   },
   buttonText: {
     color: '#fff',
